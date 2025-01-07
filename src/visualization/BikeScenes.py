@@ -89,7 +89,7 @@ class BirdEyeBikeScene(QGraphicsScene):
 
 class RearViewBikeScene(QGraphicsScene):
     wheel_length = 160
-    handle_height = 180
+    handle_height = 200
     handle_length = 150
 
     scene_view_size = 2 * handle_height
@@ -98,40 +98,40 @@ class RearViewBikeScene(QGraphicsScene):
         super().__init__()
 
         # add a ground plane as a gray rectangle
-        self.addRect(-99999, 0, 9999999, -9999, brush=Qt.gray, pen=Qt.transparent)
+        self.addRect(-99999, 0, 2*99999, 99999, brush=Qt.gray, pen=Qt.transparent)
 
         # add the bike parts
         # the front wheel depicted as an ellipse
-        self.bike_front_wheel = QGraphicsWheelItem(0, self.wheel_length / 2, self.wheel_length, 4, angle=math.pi/2)
+        self.bike_front_wheel = QGraphicsWheelItem(0, -self.wheel_length / 2, self.wheel_length, 4, angle=math.pi/2)
         wheel_pen = QPen(Qt.red)
         wheel_pen.setWidth(2)
         self.bike_front_wheel.setPen(wheel_pen)
         self.addItem(self.bike_front_wheel)
 
         # the front wheel fork depicted as a line
-        self.bike_fork = QGraphicsLineItem(0, self.wheel_length / 2, 0, self.handle_height)
+        self.bike_fork = QGraphicsLineItem(0, -self.wheel_length / 2, 0, -self.handle_height)
         fork_pen = QPen(Qt.black)
         fork_pen.setWidth(2)
         self.bike_fork.setPen(fork_pen)
         self.addItem(self.bike_fork)
 
         # the back wheel depicted as an ellipse
-        self.bike_back_wheel = QGraphicsWheelItem(0, self.wheel_length / 2, self.wheel_length, 4, angle=math.pi/2)
+        self.bike_back_wheel = QGraphicsWheelItem(0, -self.wheel_length / 2, self.wheel_length, 4, angle=math.pi/2)
         wheel_pen = QPen(Qt.gray)
         wheel_pen.setWidth(2)
         self.bike_back_wheel.setPen(wheel_pen)
         self.addItem(self.bike_back_wheel)
 
         # the handlebars depicted as a line
-        self.bike_handle = QGraphicsLineItem(-self.handle_length / 2, self.handle_height, self.handle_length / 2, self.handle_height)
+        self.bike_handle = QGraphicsLineItem(-self.handle_length / 2, -self.handle_height, self.handle_length / 2, -self.handle_height)
         handle_pen = QPen(Qt.red)
         handle_pen.setWidth(3)
         self.bike_handle.setPen(handle_pen)
         self.addItem(self.bike_handle)
 
         # set the scene rectangle
-        self.setSceneRect(-0.5 * self.scene_view_size, -0.1 * self.scene_view_size, self.scene_view_size,
-                          self.scene_view_size)
+        self.setSceneRect(-0.5 * self.scene_view_size, 0.1 * self.scene_view_size, self.scene_view_size,
+                          -self.scene_view_size)
 
         if state is not None:
             self.update_bike(state)
@@ -140,8 +140,8 @@ class RearViewBikeScene(QGraphicsScene):
         lean_angle = state.lean_angle
 
         # based on the lean, compute the center of the wheels
-        wheel_center = QPoint(int(self.wheel_length/2 * math.sin(-lean_angle)),
-                                int(self.wheel_length/2 * math.cos(-lean_angle)))
+        wheel_center = QPoint(int(self.wheel_length/2 * math.sin(lean_angle)),
+                                int(-self.wheel_length/2 * math.cos(lean_angle)))
 
         # compute the wheel width as a function of the steering angle
         # at 90 degrees, the wheel is at its maximum width and a full circle
@@ -153,8 +153,8 @@ class RearViewBikeScene(QGraphicsScene):
         self.bike_back_wheel.set(wheel_center.x(), wheel_center.y(), angle=(lean_angle + math.pi/2))
 
         # compute the center point of the handlebars
-        handle_center = QPoint(int(self.handle_height * math.sin(-lean_angle)),
-                               int(self.handle_height * math.cos(-lean_angle)))
+        handle_center = QPoint(int(self.handle_height * math.sin(lean_angle)),
+                               int(-self.handle_height * math.cos(lean_angle)))
 
         # draw the fork
         self.bike_fork.setLine(wheel_center.x(), wheel_center.y(), handle_center.x(), handle_center.y())
