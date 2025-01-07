@@ -7,7 +7,6 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
 from src.visualization.animation import BikeAnimation
 from src.visualization.perpetual_animation import PerpetualAnimation
 from src.visualization.playstate import PlayState
-from src.visualization.renderer import draw_back_view, draw_birds_eye_view
 from src.visualization.BikeScenes import BirdEyeBikeScene, RearViewBikeScene
 
 
