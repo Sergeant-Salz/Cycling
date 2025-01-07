@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QGraphicsView, QGraphicsScene
 
@@ -14,6 +14,8 @@ from src.visualization.BikeScenes import BirdEyeBikeScene
 class BikeAnimationWindow(QMainWindow):
     animation: BikeAnimation = None
     play_state: PlayState = None
+    animation_timer: QTimer = None
+    animation_delay_ms = 33
 
     bird_eye_scene: BirdEyeBikeScene
 
@@ -79,6 +81,10 @@ class BikeAnimationWindow(QMainWindow):
 
         main_widget.setLayout(main_layout)
 
+        # Timer for animation
+        self.animation_timer = QTimer()
+        self.animation_timer.timeout.connect(self.step_forward)
+
     def update_canvas(self):
         animation_state = self.animation.get_state_at_frame(self.play_state.frame)
         self.bird_eye_scene.update_bike(animation_state)
@@ -87,9 +93,11 @@ class BikeAnimationWindow(QMainWindow):
         if self.play_state.playing:
             self.play_state.playing = False
             self.play_pause_button.setText('Play')
+            self.animation_timer.stop()
         else:
             self.play_state.playing = True
             self.play_pause_button.setText('Pause')
+            self.animation_timer.start(self.animation_delay_ms)
 
     def step_forward(self):
         self.play_state.step_forward()
