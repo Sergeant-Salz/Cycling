@@ -8,7 +8,7 @@ from src.visualization.animation import BikeAnimation
 from src.visualization.perpetual_animation import PerpetualAnimation
 from src.visualization.playstate import PlayState
 from src.visualization.renderer import draw_back_view, draw_birds_eye_view
-from src.visualization.BikeScenes import BirdEyeBikeScene
+from src.visualization.BikeScenes import BirdEyeBikeScene, RearViewBikeScene
 
 
 class BikeAnimationWindow(QMainWindow):
@@ -18,6 +18,7 @@ class BikeAnimationWindow(QMainWindow):
     animation_delay_ms = 33
 
     bird_eye_scene: BirdEyeBikeScene
+    back_view: RearViewBikeScene
 
     def __init__(self, animation: BikeAnimation):
         super().__init__()
@@ -40,6 +41,7 @@ class BikeAnimationWindow(QMainWindow):
 
         # Scenes
         self.bird_eye_scene = BirdEyeBikeScene()
+        self.back_view = RearViewBikeScene()
 
         # Canvases
         self.canvas1 = QGraphicsView()
@@ -51,7 +53,7 @@ class BikeAnimationWindow(QMainWindow):
         self.canvas1.setMinimumSize(400, 400)
 
         self.canvas2 = QGraphicsView()
-        self.canvas2.setScene(QGraphicsScene())
+        self.canvas2.setScene(self.back_view)
         self.canvas2.setFrameShape(QGraphicsView.NoFrame)
         self.canvas2.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.canvas2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -88,6 +90,7 @@ class BikeAnimationWindow(QMainWindow):
     def update_canvas(self):
         animation_state = self.animation.get_state_at_frame(self.play_state.frame)
         self.bird_eye_scene.update_bike(animation_state)
+        self.back_view.update_bike(animation_state)
 
     def play_pause(self):
         if self.play_state.playing:
