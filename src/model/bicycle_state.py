@@ -11,12 +11,11 @@ class BicycleState:
     - the value of beta describes the rate of change of the steering angle
     """
 
-    def __init__(self):
-        self.phi = 0.0
-        self.delta = 0.0
-        self.omega = 0.0
-        self.beta = 0.0
-
+    def __init__(self, phi: float = 0.0, delta: float = 0.0, omega: float = 0.0, beta: float = 0.0):
+        self.phi = phi
+        self.delta = delta
+        self.omega = omega
+        self.beta = beta
 
     def get_roll(self):
         return self.phi

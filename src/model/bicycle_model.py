@@ -36,7 +36,7 @@ class BicycleModel:
         'zH': -0.7,  # Handlebar and fork mass center z coordinate (m)
     }
 
-    def __init__(self, parameters):
+    def __init__(self, **parameters):
         # Update default values with provided parameters
         params = {**self.default_parameters, **parameters}
 
@@ -103,3 +103,9 @@ class BicycleModel:
         C1dp = -(mu * ST + SF * np.cos(params['lambda']))
         C1dd = (IAlz / params['w'] * np.cos(params['lambda']) + mu * (SA + ITzz / params['w'] * np.cos(params['lambda'])))
         self.C1 = np.array([[C1pp, C1pd], [C1dp, C1dd]])
+
+    def is_default(self) -> bool:
+        return len(self.non_default_values) == 0
+
+    def get_non_default_values(self) -> dict[str, float]:
+        return self.non_default_values

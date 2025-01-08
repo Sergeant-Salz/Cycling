@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABC
 from dataclasses import dataclass
 
-from src.model.state import BicycleState
+from src.model.bicycle_state import BicycleState
 
 
 @dataclass

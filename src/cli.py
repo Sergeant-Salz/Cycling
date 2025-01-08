@@ -1,6 +1,10 @@
 import argparse
+import math
 from pathlib import Path
 
+from src.model.bicycle_state import BicycleState
+from src.model.simulation import Simulation
+from src.model.simulation_parameters import SimulationParameters
 from src.model.simulation_result import SimulationResult
 from src.visualization.visualize import visualize_animation
 
@@ -37,6 +41,28 @@ def visualize(input_file: Path, verbose = False):
     visualize_animation(animation)
 
 
+def simulate(output_file: Path, verbose = False):
+    if verbose:
+        print(f'Simulating bicycle model and saving results to {output_file}')
+    # check, that the output directory exists
+    if not output_file.parent.exists():
+        if verbose:
+            print(f"Creating directory {output_file.parent.absolute()}")
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+
+    # create initial state
+    initial_state = BicycleState(math.radians(10), math.radians(-5), 0, 0)
+    # create default parameters
+    parameters = SimulationParameters(initial_state=initial_state)
+    # create a simulation
+    simulation = Simulation(parameters)
+    # run the simulation
+    simulation.run()
+    # get the results
+    results = simulation.get_result()
+    # save the results
+    results.save_to(output_file)
+
 def cli_main():
     parser = setup_parser()
 
@@ -47,4 +73,8 @@ def cli_main():
         visualize(args.input, args.verbose)
 
     if args.command == 'simulate':
-        raise NotImplementedError('Simulation not implemented yet')
+        simulate(args.output, args.verbose)
+
+
+if __name__ == '__main__':
+    cli_main()
