@@ -33,13 +33,15 @@ class AbstractSimulationResult(ABC):
 
 class SimulationResult(AbstractSimulationResult, BikeAnimation):
     # store the state variables of the simulation
+    # order: phi, delta, phi_dot, delta_dot, T_delta
+    # order: roll, steer, roll_rate, steer_rate, steer_torque
     data: np.ndarray
     metadata: dict[str, str] = {}
     timestep: float
 
     def __init__(self, timestep: float, sample_cnt: int):
         self.timestep = timestep
-        self.data = np.zeros((sample_cnt, 3))
+        self.data = np.zeros((sample_cnt, 5))
 
     def set_metadata_field(self, key: str, value: str):
         self.metadata[key] = value
@@ -61,7 +63,7 @@ class SimulationResult(AbstractSimulationResult, BikeAnimation):
 
     def get_state_at_frame(self, frame) -> AnimationState:
         dataframe = self.data[frame]
-        return AnimationState(dataframe[0], dataframe[1], dataframe[2])
+        return AnimationState(dataframe[0], dataframe[1], 0.0)
 
     def save_to(self, path: Path):
         """
@@ -87,7 +89,7 @@ class SimulationResult(AbstractSimulationResult, BikeAnimation):
         metadata = {key[3:]: str(file_contents[key]) for key in file_contents.files if key.startswith("md_")}
 
         # check dimensions of the data
-        if len(data.shape) != 2 or data.shape[1] != 3:
+        if len(data.shape) != 2 or data.shape[1] != 5:
             raise IOError(f"Data array in {path} is not of shape (n, 3)")
 
         result = SimulationResult(timestep, data.shape[0])
