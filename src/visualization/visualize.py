@@ -1,8 +1,9 @@
 import sys
 
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QGraphicsView, QGraphicsScene
+from PyQt5.QtGui import QPainter, QFontDatabase
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QGraphicsView, \
+    QGraphicsScene, QLabel
 
 from src.visualization.animation import BikeAnimation
 from src.visualization.perpetual_animation import PerpetualAnimation
@@ -35,9 +36,9 @@ class BikeAnimationWindow(QMainWindow):
         self.animation_timer = QTimer()
         self.animation_timer.timeout.connect(self.step_forward)
 
-        self.__setup_window('Bike Animation')
+        self.__setup_window('Bike Animation', self.animation.get_metadata())
 
-    def __setup_window(self, title: str):
+    def __setup_window(self, title: str, metadata: dict[str, str] = None):
         self.setWindowTitle(title)
         self.setGeometry(100, 100, 1000, 600)
 
@@ -47,8 +48,22 @@ class BikeAnimationWindow(QMainWindow):
 
         # Layouts
         main_layout = QVBoxLayout()
+        metadata_layout = QHBoxLayout()
         canvas_layout = QHBoxLayout()
         control_layout = QHBoxLayout()
+
+        # Metadata fields
+        metadata_font = QFontDatabase().systemFont(QFontDatabase.FixedFont)
+        self.metadata_field1 = QLabel("")
+        self.frame_count_label = QLabel("frame: ---")
+        self.metadata_field1.setFont(metadata_font)
+        self.frame_count_label.setFont(metadata_font)
+        self.frame_count_label.setAlignment(Qt.AlignRight | Qt.AlignBottom)
+        if metadata is not None:
+            self.metadata_field1.setText("\n".join([f"{k}: {v}" for k, v in metadata.items()]))
+
+        metadata_layout.addWidget(self.metadata_field1)
+        metadata_layout.addWidget(self.frame_count_label)
 
         # Canvases
         self.canvas1 = QGraphicsView()
@@ -85,11 +100,14 @@ class BikeAnimationWindow(QMainWindow):
         self.step_forward_button.clicked.connect(self.step_forward)
 
         # Add layouts to main layout
+        main_layout.addLayout(metadata_layout)
         main_layout.addLayout(canvas_layout)
         main_layout.addLayout(control_layout)
 
         main_widget.setLayout(main_layout)
 
+    def update_frame_count(self, frame: int):
+        self.frame_count_label.setText(f'frame: {frame:04d}')
 
     def update_canvas(self):
         animation_state = self.animation.get_state_at_frame(self.play_state.frame)
@@ -108,10 +126,12 @@ class BikeAnimationWindow(QMainWindow):
 
     def step_forward(self):
         self.play_state.step_forward()
+        self.update_frame_count(self.play_state.frame)
         self.update_canvas()
 
     def step_back(self):
         self.play_state.step_back()
+        self.update_frame_count(self.play_state.frame)
         self.update_canvas()
 
     def get_play_state(self):
