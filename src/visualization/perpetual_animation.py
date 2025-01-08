@@ -24,8 +24,13 @@ class PerpetualAnimation(BikeAnimation):
     def get_frame_delay_ms(self) -> int:
         return 33
 
+    def get_duration(self) -> int:
+        return max(round(2 * math.pi / self.steering_rate), round(2 * math.pi / self.turning_rate))
+
     def get_metadata(self) -> dict[str, str]:
         return {
             'name': 'Perpetual Animation',
             'description': 'A simple looping animation of arbitrary values',
+            'framerate': str(round(1000 / self.get_frame_delay_ms())),
+            'duration': str(self.get_duration())
         }

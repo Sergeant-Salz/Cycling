@@ -14,5 +14,13 @@ class BikeAnimation(ABC):
         pass
 
     @abstractmethod
+    def get_duration(self) -> int:
+        """
+        Get the duration of the animation in frames
+        :return: The number of frames in the animation
+        """
+        pass
+
+    @abstractmethod
     def get_metadata(self) -> dict[str, str]:
         pass

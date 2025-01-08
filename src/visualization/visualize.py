@@ -24,8 +24,8 @@ class BikeAnimationWindow(QMainWindow):
         super().__init__()
 
         # init state
-        self.play_state = PlayState()
         self.animation = animation
+        self.play_state = PlayState(animation.get_duration())
         self.animation_delay_ms = self.animation.get_frame_delay_ms()
 
         # Scenes
