@@ -137,12 +137,13 @@ class BikeAnimationWindow(QMainWindow):
     def get_play_state(self):
         return self.play_state
 
-# Main function
-def main():
+
+def visualize_animation(animation: BikeAnimation):
     app = QApplication(sys.argv)
-    window = BikeAnimationWindow(PerpetualAnimation())
+    window = BikeAnimationWindow(animation)
     window.show()
     sys.exit(app.exec_())
 
+# for testing the visualization with a dummy animation
 if __name__ == '__main__':
-    main()
+    visualize_animation(PerpetualAnimation())
