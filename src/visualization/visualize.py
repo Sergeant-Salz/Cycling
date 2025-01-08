@@ -36,7 +36,12 @@ class BikeAnimationWindow(QMainWindow):
         self.animation_timer = QTimer()
         self.animation_timer.timeout.connect(self.step_forward)
 
+        # Setup window and UI elements
         self.__setup_window('Bike Animation', self.animation.get_metadata())
+
+        # draw initial state
+        self.update_canvas()
+        self.update_frame_count(self.play_state.frame)
 
     def __setup_window(self, title: str, metadata: dict[str, str] = None):
         self.setWindowTitle(title)
