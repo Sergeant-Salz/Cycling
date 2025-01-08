@@ -11,10 +11,10 @@ from src.visualization.BikeScenes import BirdEyeBikeScene, RearViewBikeScene
 
 
 class BikeAnimationWindow(QMainWindow):
-    animation: BikeAnimation = None
-    play_state: PlayState = None
-    animation_timer: QTimer = None
-    animation_delay_ms = 33
+    animation: BikeAnimation
+    play_state: PlayState
+    animation_timer: QTimer
+    animation_delay_ms: int
 
     bird_eye_scene: BirdEyeBikeScene
     back_view: RearViewBikeScene
@@ -25,9 +25,21 @@ class BikeAnimationWindow(QMainWindow):
         # init state
         self.play_state = PlayState()
         self.animation = animation
+        self.animation_delay_ms = self.animation.get_frame_delay_ms()
 
-        self.setWindowTitle('Visualization')
-        self.setGeometry(100, 100, 800, 600)
+        # Scenes
+        self.bird_eye_scene = BirdEyeBikeScene()
+        self.back_view = RearViewBikeScene()
+
+        # Timer for animation
+        self.animation_timer = QTimer()
+        self.animation_timer.timeout.connect(self.step_forward)
+
+        self.__setup_window('Bike Animation')
+
+    def __setup_window(self, title: str):
+        self.setWindowTitle(title)
+        self.setGeometry(100, 100, 1000, 600)
 
         # Main widget
         main_widget = QWidget()
@@ -37,10 +49,6 @@ class BikeAnimationWindow(QMainWindow):
         main_layout = QVBoxLayout()
         canvas_layout = QHBoxLayout()
         control_layout = QHBoxLayout()
-
-        # Scenes
-        self.bird_eye_scene = BirdEyeBikeScene()
-        self.back_view = RearViewBikeScene()
 
         # Canvases
         self.canvas1 = QGraphicsView()
@@ -82,9 +90,6 @@ class BikeAnimationWindow(QMainWindow):
 
         main_widget.setLayout(main_layout)
 
-        # Timer for animation
-        self.animation_timer = QTimer()
-        self.animation_timer.timeout.connect(self.step_forward)
 
     def update_canvas(self):
         animation_state = self.animation.get_state_at_frame(self.play_state.frame)

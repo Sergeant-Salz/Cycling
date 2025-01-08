@@ -20,3 +20,12 @@ class PerpetualAnimation(BikeAnimation):
         # calculate the steering angle at the given frame
         steer = self.max_steering_ange * math.cos(self.steering_rate * frame)
         return AnimationState(steer, steer, turn)
+
+    def get_frame_delay_ms(self) -> int:
+        return 33
+
+    def get_metadata(self) -> dict[str, str]:
+        return {
+            'name': 'Perpetual Animation',
+            'description': 'A simple looping animation of arbitrary values',
+        }
