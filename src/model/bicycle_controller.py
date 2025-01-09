@@ -1,5 +1,8 @@
+import math
 from abc import abstractmethod, ABC
 from dataclasses import dataclass
+
+import numpy as np
 
 
 @dataclass
@@ -46,7 +49,21 @@ class RollRateFeedbackController(BicycleController):
         self.gain = gain
 
     def calculate_control(self, roll: float, steer: float, roll_rate: float, steer_rate: float) -> BicycleControl:
-        return BicycleControl(0.0, -self.gain * roll_rate)
+        return BicycleControl(0.0, - self.gain * roll_rate)
+
+    def get_parameters(self) -> dict[str, str]:
+        return {'gain': str(self.gain)}
+
+
+class RollFeedbackController(BicycleController):
+    """
+    Controller which applies a steer torque proportional to the negative roll angle
+    """
+    def __init__(self, gain: float):
+        self.gain = gain
+
+    def calculate_control(self, roll: float, steer: float, roll_rate: float, steer_rate: float) -> BicycleControl:
+        return BicycleControl(0.0, self.gain * roll)
 
     def get_parameters(self) -> dict[str, str]:
         return {'gain': str(self.gain)}
