@@ -34,7 +34,7 @@ class Simulation:
         M_inv = np.linalg.inv(self.parameters.bicycle_model.M)
         # store some parameters for easier access
         v = self.parameters.bicycle_velocity
-        g = 9.81
+        g = self.parameters.bicycle_model.get_parameter('g')
         bike_lambda = self.parameters.bicycle_model.get_parameter('lambda')
         wheelbase = self.parameters.bicycle_model.get_parameter('w')
         trail = self.parameters.bicycle_model.get_parameter('c')
