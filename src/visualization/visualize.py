@@ -25,7 +25,7 @@ class BikeAnimationWindow(QMainWindow):
 
         # init state
         self.animation = animation
-        self.play_state = PlayState(animation.get_duration())
+        self.play_state = PlayState(animation.get_duration(), animation.get_frame_delay_ms())
         self.animation_delay_ms = self.animation.get_frame_delay_ms()
 
         # Scenes
@@ -34,7 +34,7 @@ class BikeAnimationWindow(QMainWindow):
 
         # Timer for animation
         self.animation_timer = QTimer()
-        self.animation_timer.timeout.connect(self.step_forward)
+        self.animation_timer.timeout.connect(self.next_frame)
 
         # Setup window and UI elements
         self.__setup_window('Bike Animation', self.animation.get_metadata())
@@ -127,7 +127,12 @@ class BikeAnimationWindow(QMainWindow):
         else:
             self.play_state.playing = True
             self.play_pause_button.setText('Pause')
-            self.animation_timer.start(self.animation_delay_ms)
+            self.animation_timer.start(self.play_state.get_animation_delay_ms())
+
+    def next_frame(self):
+        self.play_state.next_frame()
+        self.update_frame_count(self.play_state.frame)
+        self.update_canvas()
 
     def step_forward(self):
         self.play_state.step_forward()
