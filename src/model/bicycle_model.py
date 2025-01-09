@@ -1,6 +1,11 @@
 import numpy as np
 
 class BicycleModel:
+    """
+    Physical constants and matrices of the bicycle model.
+    Code for computing the matrices is based on the matlab implementation:
+        https://moorepants.github.io/eme134/scripts/compute_benchmark_bicycle_matrices.m
+    """
     M: np.ndarray
     C1: np.ndarray
     K0: np.ndarray
