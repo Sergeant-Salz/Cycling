@@ -15,11 +15,13 @@ class SimulationParameters:
     def __init__(self,
                  initial_state: BicycleState,
                  bicycle_model: BicycleModel = BicycleModel(),
+                 bicycle_velocity: float = 1.0,
                  controller: BicycleController = NoControlController(),
                  timestep: float = 0.01,
                  stepcount: int = 500):
         self.bicycle_model = bicycle_model
         self.initial_state = initial_state
+        self.bicycle_velocity = bicycle_velocity
         self.controller = controller
         self.timestep = timestep
         self.stepcount = stepcount
@@ -28,6 +30,7 @@ class SimulationParameters:
         description = {'bicycle_model': "default" if self.bicycle_model.is_default() else "custom",
                        'initial_state': (f"roll: {math.degrees(self.initial_state.phi)}°, "
                                          f"steer: {math.degrees(self.initial_state.delta)}°"),
+                          'bicycle_velocity': f"{self.bicycle_velocity} m/s",
                        'controller': self.controller.get_name(),
                        'timestep': f"{round(self.timestep * 1000, 3)}ms",
                        'stepcount': str(self.stepcount)}
