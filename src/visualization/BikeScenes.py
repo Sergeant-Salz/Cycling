@@ -2,10 +2,10 @@ import math
 
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPen
-from PyQt5.QtWidgets import QGraphicsScene, QGraphicsLineItem, QGraphicsEllipseItem
+from PyQt5.QtWidgets import QGraphicsScene, QGraphicsLineItem
 
 from src.visualization.QGraphicsWheelItem import QGraphicsWheelItem
-from src.visualization.animation_state import AnimationState
+from src.model.bicycle_state import BicycleState
 
 
 class BirdEyeBikeScene(QGraphicsScene):
@@ -16,7 +16,7 @@ class BirdEyeBikeScene(QGraphicsScene):
 
     scene_view_size = frame_length + 2 * wheel_length
 
-    def __init__(self, state: AnimationState = None):
+    def __init__(self, state: BicycleState = None):
         super().__init__()
 
         # add some grid lines in light gray
@@ -58,7 +58,7 @@ class BirdEyeBikeScene(QGraphicsScene):
         if state is not None:
             self.update_bike(state)
 
-    def update_bike(self, state: AnimationState):
+    def update_bike(self, state: BicycleState):
         # back of the bike is the center
         # front is the center plus the length in the direction of the angle
         bike_front = QPoint(int(self.frame_length * math.cos(state.heading)),
@@ -94,7 +94,7 @@ class RearViewBikeScene(QGraphicsScene):
 
     scene_view_size = 2 * handle_height
 
-    def __init__(self, state: AnimationState = None):
+    def __init__(self, state: BicycleState = None):
         super().__init__()
 
         # add a ground plane as a gray rectangle
@@ -136,7 +136,7 @@ class RearViewBikeScene(QGraphicsScene):
         if state is not None:
             self.update_bike(state)
 
-    def update_bike(self, state: AnimationState):
+    def update_bike(self, state: BicycleState):
         lean_angle = state.lean_angle
 
         # based on the lean, compute the center of the wheels

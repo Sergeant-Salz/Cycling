@@ -1,18 +1,27 @@
 from abc import abstractmethod, ABC
-from multiprocessing.util import abstract_sockets_supported
 from pathlib import Path
-from typing import Self
 
 import numpy as np
 
 from src.visualization.animation import BikeAnimation
-from src.visualization.animation_state import AnimationState
+from src.model.bicycle_state import BicycleState
 
 
 class AbstractSimulationResult(ABC):
     @abstractmethod
     def get_data_array(self) -> np.ndarray:
         pass
+
+    @abstractmethod
+    def set_state_at(self, index: int,
+                     roll: float,
+                     steer: float,
+                     roll_rate: float,
+                     steer_rate: float,
+                     steer_torque: float,
+                     heading: float):
+        pass
+
 
     @abstractmethod
     def get_metadata(self) -> dict[str, str]:
@@ -33,15 +42,15 @@ class AbstractSimulationResult(ABC):
 
 class SimulationResult(AbstractSimulationResult, BikeAnimation):
     # store the state variables of the simulation
-    # order: phi, delta, phi_dot, delta_dot, T_delta
-    # order: roll, steer, roll_rate, steer_rate, steer_torque
+    # order: phi, delta, phi_dot, delta_dot, T_delta, psi
+    # order: roll, steer, roll_rate, steer_rate, steer_torque, heading
     data: np.ndarray
     metadata: dict[str, str] = {}
     timestep: float
 
     def __init__(self, timestep: float, sample_cnt: int):
         self.timestep = timestep
-        self.data = np.zeros((sample_cnt, 5))
+        self.data = np.zeros((sample_cnt, 6))
 
     def set_metadata_field(self, key: str, value: str):
         self.metadata[key] = value
@@ -61,9 +70,18 @@ class SimulationResult(AbstractSimulationResult, BikeAnimation):
     def get_duration(self) -> int:
         return self.data.shape[0]
 
-    def get_state_at_frame(self, frame) -> AnimationState:
+    def set_state_at(self, index: int,
+                     roll: float,
+                     steer: float,
+                     roll_rate: float,
+                     steer_rate: float,
+                     steer_torque: float,
+                     heading: float):
+        self.data[index] = [roll, steer, roll_rate, steer_rate, steer_torque, heading]
+
+    def get_state_at_frame(self, frame) -> BicycleState:
         dataframe = self.data[frame]
-        return AnimationState(dataframe[0], dataframe[1], 0.0)
+        return BicycleState(dataframe[0], dataframe[1], dataframe[2], dataframe[3], dataframe[4], dataframe[5])
 
     def save_to(self, path: Path):
         """
@@ -89,7 +107,7 @@ class SimulationResult(AbstractSimulationResult, BikeAnimation):
         metadata = {key[3:]: str(file_contents[key]) for key in file_contents.files if key.startswith("md_")}
 
         # check dimensions of the data
-        if len(data.shape) != 2 or data.shape[1] != 5:
+        if len(data.shape) != 2 or data.shape[1] != 6:
             raise IOError(f"Data array in {path} is not of shape (n, 3)")
 
         result = SimulationResult(timestep, data.shape[0])

@@ -1,8 +1,6 @@
 from abc import abstractmethod, ABC
 from dataclasses import dataclass
 
-from src.model.bicycle_state import BicycleState
-
 
 @dataclass
 class BicycleControl:
@@ -19,7 +17,7 @@ class BicycleControl:
 
 class BicycleController(ABC):
     @abstractmethod
-    def calculate_control(self, state: BicycleState) -> BicycleControl:
+    def calculate_control(self, roll: float, steer: float, roll_rate: float, steer_rate: float) -> BicycleControl:
         pass
 
     @abstractmethod
@@ -33,7 +31,7 @@ class NoControlController(BicycleController):
     """
     Controller which applies no control input.
     """
-    def calculate_control(self, state: BicycleState) -> BicycleControl:
+    def calculate_control(self, roll: float, steer: float, roll_rate: float, steer_rate: float) -> BicycleControl:
         return BicycleControl(0.0, 0.0)
 
     def get_parameters(self) -> dict[str, str]:
@@ -47,8 +45,8 @@ class RollRateFeedbackController(BicycleController):
     def __init__(self, gain: float):
         self.gain = gain
 
-    def calculate_control(self, state: BicycleState) -> BicycleControl:
-        return BicycleControl(0.0, -self.gain * state.get_roll_rate())
+    def calculate_control(self, roll: float, steer: float, roll_rate: float, steer_rate: float) -> BicycleControl:
+        return BicycleControl(0.0, -self.gain * roll_rate)
 
     def get_parameters(self) -> dict[str, str]:
         return {'gain': str(self.gain)}

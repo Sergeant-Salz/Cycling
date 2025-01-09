@@ -114,3 +114,6 @@ class BicycleModel:
 
     def get_non_default_values(self) -> dict[str, float]:
         return self.non_default_values
+
+    def get_parameter(self, name: str) -> float:
+        return self.non_default_values[name] if name in self.non_default_values else self.default_parameters[name]

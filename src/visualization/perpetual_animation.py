@@ -1,7 +1,7 @@
 import math
 
 from src.visualization.animation import BikeAnimation
-from src.visualization.animation_state import AnimationState
+from src.model.bicycle_state import BicycleState
 
 
 class PerpetualAnimation(BikeAnimation):
@@ -14,12 +14,12 @@ class PerpetualAnimation(BikeAnimation):
     def __init__(self):
         super().__init__()
 
-    def get_state_at_frame(self, frame) -> AnimationState:
+    def get_state_at_frame(self, frame) -> BicycleState:
         # calculate the turning angle at the given frame
         turn = self.turning_rate * frame
         # calculate the steering angle at the given frame
         steer = self.max_steering_ange * math.cos(self.steering_rate * frame)
-        return AnimationState(steer, steer, turn)
+        return BicycleState(steer, steer, turn)
 
     def get_frame_delay_ms(self) -> int:
         return 33

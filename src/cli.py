@@ -51,7 +51,7 @@ def simulate(output_file: Path, verbose = False):
         output_file.parent.mkdir(parents=True, exist_ok=True)
 
     # create initial state
-    initial_state = BicycleState(math.radians(10), math.radians(-5), 0, 0)
+    initial_state = BicycleState(math.radians(10), math.radians(-5), 0, 0, 0, 0)
     # create default parameters
     parameters = SimulationParameters(initial_state=initial_state)
     # create a simulation

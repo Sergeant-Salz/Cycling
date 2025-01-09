@@ -15,7 +15,7 @@ class SimulationParameters:
     def __init__(self,
                  initial_state: BicycleState,
                  bicycle_model: BicycleModel = BicycleModel(),
-                 bicycle_velocity: float = 1.0,
+                 bicycle_velocity: float = 4.0,
                  controller: BicycleController = NoControlController(),
                  timestep: float = 0.01,
                  stepcount: int = 500):
@@ -28,8 +28,8 @@ class SimulationParameters:
 
     def get_description(self) -> dict[str, str]:
         description = {'bicycle_model': "default" if self.bicycle_model.is_default() else "custom",
-                       'initial_state': (f"roll: {math.degrees(self.initial_state.phi)}°, "
-                                         f"steer: {math.degrees(self.initial_state.delta)}°"),
+                       'initial_state': (f"roll: {math.degrees(self.initial_state.get_roll())}°, "
+                                         f"steer: {math.degrees(self.initial_state.get_steering_angle())}°"),
                           'bicycle_velocity': f"{self.bicycle_velocity} m/s",
                        'controller': self.controller.get_name(),
                        'timestep': f"{round(self.timestep * 1000, 3)}ms",
