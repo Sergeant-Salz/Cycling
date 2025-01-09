@@ -61,14 +61,14 @@ class BirdEyeBikeScene(QGraphicsScene):
     def update_bike(self, state: BicycleState):
         # back of the bike is the center
         # front is the center plus the length in the direction of the angle
-        bike_front = QPoint(int(self.frame_length * math.cos(state.heading)),
-                            int(self.frame_length * math.sin(state.heading)))
+        bike_front = QPoint(int(self.frame_length * math.sin(state.heading)),
+                            int(-self.frame_length * math.cos(state.heading)))
 
         # set the frame rotation
         self.bike_frame.setLine(0, 0, bike_front.x(), bike_front.y())
 
         # set the back wheel
-        self.bike_back_wheel.set_angle(state.heading)
+        self.bike_back_wheel.set_angle(state.heading - math.pi / 2)
 
         # the front wheel is centered on the bike front
         # its angle is relative to the bike body angle
@@ -76,11 +76,11 @@ class BirdEyeBikeScene(QGraphicsScene):
 
         # set the wheel position and rotation
         self.bike_front_wheel.set_center(bike_front.x(), bike_front.y())
-        self.bike_front_wheel.set_angle(absolute_steering_angle)
+        self.bike_front_wheel.set_angle(absolute_steering_angle - math.pi / 2)
 
         # set the steering handle position and rotation
         # its direction is orthogonal to the front wheel
-        handle_angle = absolute_steering_angle + math.pi / 2
+        handle_angle = absolute_steering_angle
         self.steering_handle.setLine(bike_front.x() - self.steering_handle_length * math.cos(handle_angle) / 2,
                                      bike_front.y() - self.steering_handle_length * math.sin(handle_angle) / 2,
                                      bike_front.x() + self.steering_handle_length * math.cos(handle_angle) / 2,
