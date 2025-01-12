@@ -61,7 +61,7 @@ class Simulation:
 
             # calculate the heading angle psi
             # based on equation (B6) from Appendix B
-            psi_dot = np.cos(bike_lambda) * (v * q[1] + trail * q_dot[1]) / wheelbase
+            psi_dot = trail / wheelbase * q_dot[1] + v * np.cos(bike_lambda) / wheelbase * q[1]
             psi = prev_state.heading + self.parameters.timestep * psi_dot
 
             # store the new state
