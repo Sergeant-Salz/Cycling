@@ -4,13 +4,13 @@ import warnings
 from argparse import ArgumentTypeError
 from pathlib import Path
 
-from src.model.bicycle_controller import NoControlController, RollRateFeedbackController, RollFeedbackController
-from src.model.bicycle_model import BicycleModel
-from src.model.bicycle_state import BicycleState
-from src.model.simulation import Simulation
-from src.model.simulation_parameters import SimulationParameters
-from src.model.simulation_result import SimulationResult
-from src.visualization.visualize import visualize_animation
+from model.bicycle_controller import NoControlController, RollRateFeedbackController, RollFeedbackController
+from model.bicycle_model import BicycleModel
+from model.bicycle_state import BicycleState
+from model.simulation import Simulation
+from model.simulation_parameters import SimulationParameters
+from model.simulation_result import SimulationResult
+from visualization.visualize import visualize_animation
 
 
 def setup_parser() -> argparse.ArgumentParser:
@@ -19,7 +19,7 @@ def setup_parser() -> argparse.ArgumentParser:
     parser.add_argument('--verbose', '-v', action='store_true', help='Print debug information')
 
     # add a subparser for the visualize command
-    subparsers = parser.add_subparsers(dest='command')
+    subparsers = parser.add_subparsers(dest='command', required=True)
     visualize_parser = subparsers.add_parser('visualize', help='Visualize the bicycle model')
     visualize_parser.add_argument('--input', '-i',
                                   type=Path,

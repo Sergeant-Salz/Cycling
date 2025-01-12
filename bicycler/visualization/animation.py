@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.model.bicycle_state import BicycleState
+from model.bicycle_state import BicycleState
 
 
 class BikeAnimation(ABC):

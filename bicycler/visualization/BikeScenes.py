@@ -4,8 +4,8 @@ from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPen
 from PyQt5.QtWidgets import QGraphicsScene, QGraphicsLineItem
 
-from src.visualization.QGraphicsWheelItem import QGraphicsWheelItem
-from src.model.bicycle_state import BicycleState
+from visualization.QGraphicsWheelItem import QGraphicsWheelItem
+from model.bicycle_state import BicycleState
 
 
 class BirdEyeBikeScene(QGraphicsScene):

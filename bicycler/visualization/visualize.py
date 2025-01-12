@@ -5,10 +5,10 @@ from PyQt5.QtGui import QPainter, QFontDatabase
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QGraphicsView, \
     QGraphicsScene, QLabel
 
-from src.visualization.animation import BikeAnimation
-from src.visualization.perpetual_animation import PerpetualAnimation
-from src.visualization.playstate import PlayState
-from src.visualization.BikeScenes import BirdEyeBikeScene, RearViewBikeScene
+from visualization.animation import BikeAnimation
+from visualization.perpetual_animation import PerpetualAnimation
+from visualization.playstate import PlayState
+from visualization.BikeScenes import BirdEyeBikeScene, RearViewBikeScene
 
 
 class BikeAnimationWindow(QMainWindow):

@@ -1,8 +1,8 @@
 import math
 
-from src.model.bicycle_controller import BicycleController, NoControlController
-from src.model.bicycle_model import BicycleModel
-from src.model.bicycle_state import BicycleState
+from model.bicycle_controller import BicycleController, NoControlController
+from model.bicycle_model import BicycleModel
+from model.bicycle_state import BicycleState
 
 
 class SimulationParameters:

@@ -1,7 +1,7 @@
 import math
 
-from src.visualization.animation import BikeAnimation
-from src.model.bicycle_state import BicycleState
+from visualization.animation import BikeAnimation
+from model.bicycle_state import BicycleState
 
 
 class PerpetualAnimation(BikeAnimation):

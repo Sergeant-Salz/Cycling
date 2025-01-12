@@ -3,8 +3,8 @@ from pathlib import Path
 
 import numpy as np
 
-from src.visualization.animation import BikeAnimation
-from src.model.bicycle_state import BicycleState
+from visualization.animation import BikeAnimation
+from model.bicycle_state import BicycleState
 
 
 class AbstractSimulationResult(ABC):

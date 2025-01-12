@@ -1,8 +1,8 @@
 import numpy as np
 
-from src.model.bicycle_state import BicycleState
-from src.model.simulation_parameters import SimulationParameters
-from src.model.simulation_result import SimulationResult
+from model.bicycle_state import BicycleState
+from model.simulation_parameters import SimulationParameters
+from model.simulation_result import SimulationResult
 
 
 class Simulation:
