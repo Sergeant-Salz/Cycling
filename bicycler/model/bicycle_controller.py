@@ -74,19 +74,45 @@ class RollPIDController(BicycleController):
     PID control for roll angle
     """
     target_roll = 0.0
+    integral_window_size: int
+    integral_window: np.ndarray
+    integral_window_idx = 0
 
-    def __init__(self, kp: float, ki: float, kd: float):
+    def __init__(self, kp: float, ki: float, kd: float, window_size = 10):
         self.kp = kp
         self.ki = ki
+        self.kd = kd
+        self.integral_window_size = window_size
+        self.integral_window = np.zeros(window_size)
+
+    def calculate_control(self, roll: float, steer: float, roll_rate: float, steer_rate: float) -> BicycleControl:
+        error = self.target_roll - roll
+        derivative = roll_rate
+        self.integral_window[self.integral_window_idx] = error
+        self.integral_window_idx = (self.integral_window_idx + 1) % self.integral_window_size
+        integral = np.sum(self.integral_window)
+        print(f"error: {error}, integral: {integral}, derivative: {derivative} -> control: {self.kp * error - self.ki * integral + self.kd * derivative}")
+        return BicycleControl(0.0, self.kp * error - self.ki * integral + self.kd * derivative)
+
+    def get_parameters(self) -> dict[str, str]:
+        return {'kp': str(self.kp), 'ki': str(self.ki), 'kd': str(self.kd)}
+
+class RollPDController(BicycleController):
+    """
+    PD control for roll angle
+    """
+    target_roll = 0.0
+
+    def __init__(self, kp: float, kd: float):
+        self.kp = kp
         self.kd = kd
         self.integral = 0.0
 
     def calculate_control(self, roll: float, steer: float, roll_rate: float, steer_rate: float) -> BicycleControl:
         error = self.target_roll - roll
-        self.integral += error
         derivative = roll_rate
-        print(f"error: {error}, integral: {self.integral}, derivative: {derivative} -> control: {self.kp * error + self.ki * self.integral + self.kd * derivative}")
-        return BicycleControl(self.kp * error + self.ki * self.integral + self.kd * derivative, 0.0)
+        print(f"error: {error}, derivative: {derivative} -> control: {self.kp * error + self.kd * derivative}")
+        return BicycleControl(0.0, self.kp * error + self.kd * derivative)
 
     def get_parameters(self) -> dict[str, str]:
-        return {'kp': str(self.kp), 'ki': str(self.ki), 'kd': str(self.kd)}
+        return {'kp': str(self.kp), 'kd': str(self.kd)}
