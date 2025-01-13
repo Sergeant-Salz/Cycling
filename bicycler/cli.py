@@ -4,6 +4,7 @@ import warnings
 from argparse import ArgumentTypeError
 from pathlib import Path
 
+from model.bicycle_controller import RollPIDController
 from model.bicycle_controller import NoControlController, RollRateFeedbackController, RollFeedbackController
 from model.bicycle_model import BicycleModel
 from model.bicycle_state import BicycleState
@@ -47,7 +48,7 @@ def setup_parser() -> argparse.ArgumentParser:
                                     help='Initial steering angle in degree', default=-2)
     simulate_parser.add_argument('--controller', '-c', type=str,
                                     help='Controller to use for the simulation',
-                                 choices=['none', 'roll', 'rollrate'], default='none')
+                                 choices=['none', 'roll', 'rollrate', 'pid'], default='none')
     simulate_parser.add_argument('--model-parameters', metavar='PARAMETER=VALUE', type=str, nargs='+',
                                     help='Vary parameter values of the bicycle model. '
                                          'Give name and value pairs as NAME=VALE separated by spaces.'
@@ -120,9 +121,11 @@ def cli_main():
         if args.controller == 'none':
             controller = NoControlController()
         elif args.controller == 'rollrate':
-            controller = RollRateFeedbackController(50.0)
+            controller = RollRateFeedbackController(10.0)
         elif args.controller == "roll":
-            controller = RollFeedbackController(50.0)
+            controller = RollFeedbackController(10.0)
+        elif args.controller == "pid":
+            controller = RollPIDController(10, 1, 100)
         else:
             raise ValueError(f'Unknown controller {args.controller} specified')
         # create the simulation parameters
