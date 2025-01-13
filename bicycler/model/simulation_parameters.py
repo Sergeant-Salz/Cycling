@@ -37,12 +37,12 @@ class SimulationParameters:
 
         # add non-default parameters to description if they exist
         if not self.bicycle_model.is_default():
-            description['bicycle_model'] = description['bicycle_model'] + f" ({", ".join([k + ":" + str(v) for k, v in self.bicycle_model.get_non_default_values().items()])})"
+            description['bicycle_model'] = description['bicycle_model'] + f" ({', '.join([k + ':' + str(v) for k, v in self.bicycle_model.get_non_default_values().items()])})"
 
 
         # add controller parameters to description if they exist
         controller_params = self.controller.get_parameters()
         if len(controller_params):
-            description['controller'] = description['controller'] + f" ({", ".join([k + ":" + v for k, v in controller_params.items()])})"
+            description['controller'] = description['controller'] + f" ({', '.join([k + ':' + v for k, v in controller_params.items()])})"
 
         return description
