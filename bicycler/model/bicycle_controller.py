@@ -91,7 +91,6 @@ class RollPIDController(BicycleController):
         self.integral_window[self.integral_window_idx] = error
         self.integral_window_idx = (self.integral_window_idx + 1) % self.integral_window_size
         integral = np.sum(self.integral_window)
-        print(f"error: {error}, integral: {integral}, derivative: {derivative} -> control: {self.kp * error - self.ki * integral + self.kd * derivative}")
         return BicycleControl(0.0, self.kp * error - self.ki * integral + self.kd * derivative)
 
     def get_parameters(self) -> dict[str, str]:
@@ -111,8 +110,7 @@ class RollPDController(BicycleController):
     def calculate_control(self, roll: float, steer: float, roll_rate: float, steer_rate: float) -> BicycleControl:
         error = self.target_roll - roll
         derivative = roll_rate
-        print(f"error: {error}, derivative: {derivative} -> control: {self.kp * error + self.kd * derivative}")
-        return BicycleControl(0.0, self.kp * error + self.kd * derivative)
+        return BicycleControl(0.0,  self.kp * error + self.kd * derivative)
 
     def get_parameters(self) -> dict[str, str]:
         return {'kp': str(self.kp), 'kd': str(self.kd)}
