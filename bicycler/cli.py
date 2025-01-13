@@ -125,7 +125,7 @@ def cli_main():
         elif args.controller == "roll":
             controller = RollFeedbackController(10.0)
         elif args.controller == "pid":
-            controller = RollPIDController(10, 0, 10)
+            controller = RollPIDController(10, 10, 10)
         elif args.controller == "pd":
             controller = RollPDController(10, 10)
         else:
